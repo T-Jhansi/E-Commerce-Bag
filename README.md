@@ -1,35 +1,48 @@
-# Bag Co. — Find My Bag Service Desk
+# Bag Co. — E-commerce Demo
 
-A demo "Find My Bag" servicing flow for a bag manufacturer: customers drop
-a bag in for repair and track it, staff run the back office. Built with
+A demo e-commerce site for a bag manufacturer: customers browse and buy
+bags, track orders, and drop a bag in for repair; staff run products,
+orders, and the repair desk from a separate admin panel. Built with
 Next.js (App Router) + TypeScript + Tailwind.
 
-This milestone runs on **mock data only** — tickets are stored in the
-browser's `localStorage`, seeded with sample tickets on first load. No
-backend or database yet; that's the next milestone (FastAPI + Postgres).
+This milestone runs on **mock data only** — products, orders, and tickets
+are stored in the browser's `localStorage`, seeded with sample data on
+first load. No backend or database yet; that's the next milestone
+(FastAPI + Postgres).
 
 ## Routes
 
-- `/` — landing page, links to both panels
-- `/customer` — drop off a bag for service (generates a ticket ID) and
-  track an existing ticket by ID or phone number
-- `/admin` — passcode-gated staff panel: dashboard of all tickets with
-  status filters and search, and a ticket detail page to assign a
-  technician, set an ETA, change status, and leave notes the customer
-  sees when they track their bag
+**Customer-facing**
+- `/` — home page with featured products
+- `/shop`, `/shop/[slug]` — product catalogue and product detail pages
+- `/cart`, `/checkout` — cart and checkout (places a real mock order)
+- `/orders/[id]` — order confirmation and live status tracking
+- `/account` — mock sign-in (name + phone, no password) and order history
+- `/customer` — Find My Bag: drop off a bag for service and track a
+  repair ticket by ID or phone number
 
-  Demo passcode: `bagco123` (hardcoded for this milestone, see
-  `src/components/AdminGate.tsx`)
+**Admin (separate login from customers)** — gated by `/admin`
+- `/admin` — overview: open orders, open tickets, low stock
+- `/admin/products` — product CRUD (add, edit, delete)
+- `/admin/orders`, `/admin/orders/[id]` — order list and status updates,
+  with notes the customer sees when tracking their order
+- `/admin/tickets`, `/admin/tickets/[id]` — the Find My Bag service desk
+
+Demo admin login: `admin` / `bagco123` (hardcoded for this milestone, see
+`src/components/AdminGate.tsx`)
 
 ## Data model
 
-See `src/lib/types.ts`. A `ServiceTicket` moves through:
-`Received → In Service → Ready for Pickup → Returned` (or `Cancelled`),
-with a running list of timestamped notes both roles can read.
+See `src/lib/types.ts` for `Product`, `Order`, and `ServiceTicket`.
+Each `lib/*-store.ts` file (`product-store`, `order-store`, `store`
+for tickets, `cart-store`, `auth-store`) is the only place that reads or
+writes `localStorage` for that domain — swapping in a real API later
+means replacing those files without touching the pages.
 
-`src/lib/store.ts` is the only place that reads/writes `localStorage` —
-swapping in a real API later means replacing this file without touching
-the pages.
+An `Order` moves through `Pending → Processing → Shipped → Delivered`
+(or `Cancelled`); a `ServiceTicket` through
+`Received → In Service → Ready for Pickup → Returned` (or `Cancelled`).
+Both carry a running list of timestamped notes both roles can read.
 
 ## Local development
 
@@ -43,10 +56,9 @@ next free port if 3000 is taken).
 
 ## Deploying to Vercel
 
-This is a stock Next.js app — Vercel detects it automatically.
+This is a stock Next.js app — Vercel detects it automatically. Once the
+project is imported from GitHub, every push to `main` redeploys it.
 
-1. Push this repo to GitHub.
-2. In Vercel, "Add New Project" → import the repo → deploy (no
-   environment variables needed yet).
-3. Or, from the CLI: `npx vercel` (first run links/creates the project
-   and deploys a preview), then `npx vercel --prod` for production.
+- From the CLI instead: `npx vercel` (first run links/creates the
+  project and deploys a preview), then `npx vercel --prod` for
+  production.
