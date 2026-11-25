@@ -13,6 +13,7 @@ export const SEED_PRODUCTS: Product[] = [
     description:
       "Our best-selling daily backpack: a padded 15.6\" laptop sleeve, a quick-access front pocket, and water-resistant canvas that shrugs off a monsoon commute.",
     colorway: "Charcoal",
+    image: "/products/backpacks.jpg",
     stock: 24,
     featured: true,
     createdAt: now,
@@ -27,6 +28,7 @@ export const SEED_PRODUCTS: Product[] = [
     description:
       "A 45L duffel built for overnight trips and weekend treks, with a detachable shoulder strap and a separate shoe compartment that keeps muddy soles away from clean clothes.",
     colorway: "Olive",
+    image: "/products/travel.jpg",
     stock: 15,
     featured: true,
     createdAt: now,
@@ -41,6 +43,7 @@ export const SEED_PRODUCTS: Product[] = [
     description:
       "Heavyweight cotton canvas with leather handles reinforced at every stress point, roomy enough for a laptop, a notebook, and a change of clothes.",
     colorway: "Sand",
+    image: "/products/totes.jpg",
     stock: 32,
     featured: true,
     createdAt: now,
@@ -55,6 +58,7 @@ export const SEED_PRODUCTS: Product[] = [
     description:
       "A minimal 14\" sleeve with a shock-absorbing foam lining, for carrying your laptop inside another bag without a scratch.",
     colorway: "Graphite",
+    image: "/products/laptop-bags.jpg",
     stock: 40,
     createdAt: now,
     updatedAt: now,
@@ -69,6 +73,7 @@ export const SEED_PRODUCTS: Product[] = [
     description:
       "A structured messenger with a magnetic flap closure and a dedicated 13\" laptop compartment — built for a bicycle commute as much as a train platform.",
     colorway: "Rust",
+    image: "/products/laptop-bags.jpg",
     stock: 18,
     featured: true,
     createdAt: now,
@@ -83,6 +88,7 @@ export const SEED_PRODUCTS: Product[] = [
     description:
       "An 80L hard-shell trolley with four 360° wheels and a TSA-approved combination lock, sized for a two-week trip.",
     colorway: "Deep Navy",
+    image: "/products/travel.jpg",
     stock: 8,
     createdAt: now,
     updatedAt: now,
@@ -96,6 +102,7 @@ export const SEED_PRODUCTS: Product[] = [
     description:
       "A single-strap sling that sits flat against your back, with a side pocket sized exactly for a water bottle.",
     colorway: "Forest",
+    image: "/products/backpacks.jpg",
     stock: 27,
     createdAt: now,
     updatedAt: now,
@@ -109,6 +116,7 @@ export const SEED_PRODUCTS: Product[] = [
     description:
       "A lighter, foldable tote for grocery runs and daily errands — rolls up small enough to live in a glovebox.",
     colorway: "Natural",
+    image: "/products/totes.jpg",
     stock: 50,
     createdAt: now,
     updatedAt: now,
@@ -122,6 +130,7 @@ export const SEED_PRODUCTS: Product[] = [
     description:
       "Full-grain leather tags with a privacy flap over your address card, so your details stay hidden until you choose to show them.",
     colorway: "Tan",
+    image: "/products/accessories.jpg",
     stock: 60,
     createdAt: now,
     updatedAt: now,

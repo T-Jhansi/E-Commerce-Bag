@@ -3,6 +3,14 @@
 import { useState } from "react";
 import { NewProductInput, PRODUCT_CATEGORIES, Product, ProductCategory } from "@/lib/types";
 
+const CATEGORY_DEFAULT_IMAGE: Record<ProductCategory, string> = {
+  Backpacks: "/products/backpacks.jpg",
+  Travel: "/products/travel.jpg",
+  "Laptop Bags": "/products/laptop-bags.jpg",
+  Totes: "/products/totes.jpg",
+  Accessories: "/products/accessories.jpg",
+};
+
 export function ProductForm({
   initial,
   submitLabel,
@@ -19,6 +27,7 @@ export function ProductForm({
     compareAtPrice: initial?.compareAtPrice?.toString() ?? "",
     description: initial?.description ?? "",
     colorway: initial?.colorway ?? "",
+    image: initial?.image ?? "",
     stock: initial?.stock?.toString() ?? "",
     featured: initial?.featured ?? false,
   });
@@ -52,6 +61,7 @@ export function ProductForm({
       compareAtPrice: form.compareAtPrice ? Number(form.compareAtPrice) : undefined,
       description: form.description.trim(),
       colorway: form.colorway.trim(),
+      image: form.image.trim() || CATEGORY_DEFAULT_IMAGE[form.category as ProductCategory],
       stock,
       featured: form.featured,
     });
@@ -127,6 +137,15 @@ export function ProductForm({
           />
         </Field>
       </div>
+
+      <Field label="Image URL (optional)">
+        <input
+          className="input"
+          value={form.image}
+          onChange={(e) => update("image", e.target.value)}
+          placeholder={CATEGORY_DEFAULT_IMAGE[form.category as ProductCategory]}
+        />
+      </Field>
 
       <Field label="Description" required>
         <textarea

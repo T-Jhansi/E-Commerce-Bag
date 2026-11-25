@@ -75,6 +75,7 @@ export interface Product {
   compareAtPrice?: number;
   description: string;
   colorway: string; // used to derive the placeholder art + a real attribute shown on the PDP
+  image: string; // path under /public, e.g. /products/backpacks.jpg
   stock: number;
   featured?: boolean;
   createdAt: string;

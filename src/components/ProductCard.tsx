@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Product } from "@/lib/types";
 import { formatINR } from "@/lib/format";
-import { ProductArt } from "@/components/ProductArt";
+import { ProductImage } from "@/components/ProductImage";
 
 export function ProductCard({ product }: { product: Product }) {
   const outOfStock = product.stock <= 0;
@@ -11,9 +11,9 @@ export function ProductCard({ product }: { product: Product }) {
       className="group flex flex-col overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--card)] transition hover:border-leather hover:shadow-sm"
     >
       <div className="relative aspect-square overflow-hidden">
-        <ProductArt
-          category={product.category}
-          className="h-full w-full transition duration-300 group-hover:scale-105"
+        <ProductImage
+          product={product}
+          className="transition duration-300 group-hover:scale-105"
         />
         {product.compareAtPrice && (
           <span className="absolute left-3 top-3 rounded-full bg-leather px-2.5 py-1 text-xs font-medium text-white">

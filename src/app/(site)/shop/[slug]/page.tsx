@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { useProduct } from "@/hooks/use-products";
-import { ProductArt } from "@/components/ProductArt";
+import { ProductImage } from "@/components/ProductImage";
 import { formatINR } from "@/lib/format";
 import { addToCart } from "@/lib/cart-store";
 
@@ -50,8 +50,8 @@ export default function ProductDetailPage() {
       </Link>
 
       <div className="mt-6 grid gap-8 sm:grid-cols-2">
-        <div className="overflow-hidden rounded-2xl border border-[var(--border)]">
-          <ProductArt category={product.category} className="w-full" />
+        <div className="relative aspect-square overflow-hidden rounded-2xl border border-[var(--border)]">
+          <ProductImage product={product} priority sizes="(min-width: 640px) 50vw, 100vw" />
         </div>
 
         <div>
