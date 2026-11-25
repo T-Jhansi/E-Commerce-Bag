@@ -22,7 +22,7 @@ export default function AdminTicketDetail() {
   if (ready && !ticket) {
     return (
       <main className="mx-auto max-w-2xl px-6 py-12">
-        <Link href="/admin" className="text-sm text-[var(--muted)] hover:text-leather">
+        <Link href="/admin/tickets" className="text-sm text-[var(--muted)] hover:text-leather">
           ← Back to service desk
         </Link>
         <p className="mt-6 text-[var(--muted)]">
@@ -72,7 +72,7 @@ export default function AdminTicketDetail() {
   return (
     <main className="mx-auto min-h-screen max-w-3xl px-6 py-12">
       <div className="mb-6 flex items-center justify-between">
-        <Link href="/admin" className="text-sm text-[var(--muted)] hover:text-leather">
+        <Link href="/admin/tickets" className="text-sm text-[var(--muted)] hover:text-leather">
           ← Back to service desk
         </Link>
         {savedFlash && (
