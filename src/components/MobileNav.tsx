@@ -3,13 +3,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { X, ChevronRight, ChevronDown, ShoppingBag, User, ShieldCheck, Truck, Sparkles } from "lucide-react";
+import { X, ChevronRight, ChevronDown, ShoppingBag, User, ShieldCheck, Truck, Sparkles, Search } from "lucide-react";
 import { CATEGORY_LIST } from "@/lib/categories";
 import { useSiteUI } from "@/components/SiteUIProvider";
 import { useCart } from "@/hooks/use-cart";
 
 export function MobileNav() {
-  const { mobileNavOpen, setMobileNavOpen, setCartOpen } = useSiteUI();
+  const { mobileNavOpen, setMobileNavOpen, setCartOpen, setSearchOpen } = useSiteUI();
   const { count } = useCart();
   const [expanded, setExpanded] = useState<string | null>(null);
 
@@ -34,6 +34,19 @@ export function MobileNav() {
         </div>
 
         <div className="flex-1 space-y-1 overflow-y-auto px-4 py-2">
+          <button
+            onClick={() => {
+              close();
+              setSearchOpen(true);
+            }}
+            className="mb-3 flex w-full items-center justify-between rounded-lg bg-slate-100 px-3.5 py-2.5 text-sm text-slate-500 hover:bg-slate-200"
+          >
+            <span className="flex items-center gap-2">
+              <Search className="h-4 w-4 text-slate-400" />
+              Search products...
+            </span>
+          </button>
+
           <Link
             href="/shop"
             onClick={close}

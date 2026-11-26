@@ -1,16 +1,28 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { ShoppingBag, Check } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ShoppingBag, Check, Heart } from "lucide-react";
 import { Product } from "@/lib/types";
 import { formatINR } from "@/lib/format";
 import { ProductImage } from "@/components/ProductImage";
 import { addToCart } from "@/lib/cart-store";
+import { isInWishlist, subscribeWishlist, toggleWishlist } from "@/lib/wishlist-store";
 
 export function ProductCard({ product }: { product: Product }) {
   const [justAdded, setJustAdded] = useState(false);
+  const [favorited, setFavorited] = useState(false);
   const outOfStock = product.stock <= 0;
+
+  useEffect(() => {
+    setFavorited(isInWishlist(product.id));
+    return subscribeWishlist(() => setFavorited(isInWishlist(product.id)));
+  }, [product.id]);
+
+  function handleWishlist(e: React.MouseEvent) {
+    e.preventDefault();
+    toggleWishlist(product.id);
+  }
   const discountPercent = product.compareAtPrice
     ? Math.round((1 - product.price / product.compareAtPrice) * 100)
     : 0;
@@ -48,6 +60,16 @@ export function ProductCard({ product }: { product: Product }) {
             </span>
           )}
         </div>
+
+        <button
+          onClick={handleWishlist}
+          className={`absolute right-3 top-3 z-10 rounded-full p-2 transition-all ${
+            favorited ? "bg-rose-50 text-rose-600 shadow-sm" : "bg-white/80 text-slate-600 shadow-xs hover:bg-white hover:text-slate-950"
+          }`}
+          aria-label={favorited ? "Remove from wishlist" : "Add to wishlist"}
+        >
+          <Heart className={`h-4 w-4 ${favorited ? "fill-rose-600 text-rose-600" : ""}`} />
+        </button>
       </div>
 
       <div className="flex flex-1 flex-col justify-between p-4">

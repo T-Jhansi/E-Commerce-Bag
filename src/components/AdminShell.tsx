@@ -6,6 +6,7 @@ import { adminSignOut } from "@/components/AdminGate";
 
 const NAV = [
   { href: "/admin", label: "Overview", exact: true },
+  { href: "/admin/analytics", label: "Analytics" },
   { href: "/admin/products", label: "Products" },
   { href: "/admin/orders", label: "Orders" },
   { href: "/admin/tickets", label: "Maintenance & Service" },

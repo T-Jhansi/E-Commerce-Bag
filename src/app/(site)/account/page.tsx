@@ -1,22 +1,40 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { Suspense, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { useAccount } from "@/hooks/use-account";
 import { signIn, signOut } from "@/lib/auth-store";
 import { findOrdersByPhone } from "@/lib/order-store";
-import { formatDate, formatINR } from "@/lib/format";
+import { findWarrantiesByPhone } from "@/lib/warranty-store";
+import { findStorageTicketsByPhone } from "@/lib/storage-store";
+import { useWishlist } from "@/hooks/use-wishlist";
+import { ProductCard } from "@/components/ProductCard";
+import { formatDate, formatDateTime, formatINR } from "@/lib/format";
 
-export default function AccountPage() {
+type Tab = "orders" | "warranty" | "clock-room" | "wishlist";
+
+function AccountPageInner() {
   const { account, ready } = useAccount();
+  const searchParams = useSearchParams();
+  const initialTab = (searchParams.get("tab") as Tab) ?? "orders";
+  const [tab, setTab] = useState<Tab>(initialTab);
 
   if (!ready) return null;
 
   return (
-    <main className="mx-auto min-h-screen max-w-2xl px-6 py-12">
+    <main className="mx-auto min-h-screen max-w-3xl px-6 py-12">
       <h1 className="mb-6 font-display text-3xl font-semibold">Account</h1>
-      {account ? <AccountHome account={account} /> : <SignInForm />}
+      {account ? <AccountHome account={account} tab={tab} setTab={setTab} /> : <SignInForm />}
     </main>
+  );
+}
+
+export default function AccountPage() {
+  return (
+    <Suspense fallback={null}>
+      <AccountPageInner />
+    </Suspense>
   );
 }
 
@@ -37,7 +55,7 @@ function SignInForm() {
     <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-6">
       <p className="text-sm text-[var(--muted)]">
         Demo sign-in — no password needed, this just remembers you on this
-        device so your order history shows up here.
+        device so your orders, warranty, and Clock Room activity show up here.
       </p>
       <form onSubmit={handleSubmit} className="mt-5 space-y-4">
         <label className="block">
@@ -80,8 +98,26 @@ function SignInForm() {
   );
 }
 
-function AccountHome({ account }: { account: { name: string; phone: string; email: string } }) {
+const TABS: { id: Tab; label: string }[] = [
+  { id: "orders", label: "Orders" },
+  { id: "warranty", label: "Warranty" },
+  { id: "clock-room", label: "Clock Room" },
+  { id: "wishlist", label: "Wishlist" },
+];
+
+function AccountHome({
+  account,
+  tab,
+  setTab,
+}: {
+  account: { name: string; phone: string; email: string };
+  tab: Tab;
+  setTab: (tab: Tab) => void;
+}) {
   const orders = findOrdersByPhone(account.phone);
+  const warranties = findWarrantiesByPhone(account.phone);
+  const storageTickets = findStorageTicketsByPhone(account.phone);
+  const { items: wishlistItems } = useWishlist();
 
   return (
     <div className="space-y-6">
@@ -100,37 +136,119 @@ function AccountHome({ account }: { account: { name: string; phone: string; emai
         </button>
       </div>
 
-      <div>
-        <h2 className="mb-3 font-display text-lg font-semibold">Order history</h2>
-        {orders.length === 0 ? (
-          <p className="text-sm text-[var(--muted)]">
-            No orders yet.{" "}
-            <Link href="/shop" className="underline hover:text-leather">
-              Start shopping
-            </Link>
-            .
-          </p>
-        ) : (
-          <ul className="divide-y divide-[var(--border)] rounded-2xl border border-[var(--border)] bg-[var(--card)]">
-            {orders.map((order) => (
-              <li key={order.id}>
-                <Link
-                  href={`/orders/${order.id}`}
-                  className="flex items-center justify-between gap-3 p-4 hover:bg-[var(--canvas)]"
-                >
+      <div className="flex flex-wrap gap-2">
+        {TABS.map((t) => (
+          <button
+            key={t.id}
+            type="button"
+            onClick={() => setTab(t.id)}
+            className={`rounded-full border px-3 py-1.5 text-xs font-bold uppercase tracking-wide transition ${
+              tab === t.id
+                ? "border-slate-950 bg-slate-950 text-white"
+                : "border-slate-300 text-slate-600 hover:border-slate-950 hover:text-slate-950"
+            }`}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      {tab === "orders" && (
+        <div>
+          {orders.length === 0 ? (
+            <EmptyState href="/shop" label="Start shopping" text="No orders yet." />
+          ) : (
+            <ul className="divide-y divide-[var(--border)] rounded-2xl border border-[var(--border)] bg-[var(--card)]">
+              {orders.map((order) => (
+                <li key={order.id}>
+                  <Link
+                    href={`/orders/${order.id}`}
+                    className="flex items-center justify-between gap-3 p-4 hover:bg-[var(--canvas)]"
+                  >
+                    <div>
+                      <p className="font-medium">{order.id}</p>
+                      <p className="text-xs text-[var(--muted)]">
+                        {formatDate(order.createdAt)} · {order.status}
+                      </p>
+                    </div>
+                    <span className="tabular-nums">{formatINR(order.total)}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
+
+      {tab === "warranty" && (
+        <div>
+          {warranties.length === 0 ? (
+            <EmptyState href="/warranty" label="Register a product" text="No warranty registrations yet." />
+          ) : (
+            <ul className="divide-y divide-[var(--border)] rounded-2xl border border-[var(--border)] bg-[var(--card)]">
+              {warranties.map((w) => (
+                <li key={w.id} className="flex items-center justify-between gap-3 p-4">
                   <div>
-                    <p className="font-medium">{order.id}</p>
+                    <p className="font-medium">{w.id}</p>
                     <p className="text-xs text-[var(--muted)]">
-                      {formatDate(order.createdAt)} · {order.status}
+                      {w.productName} · {formatDate(w.purchaseDate)}
                     </p>
                   </div>
-                  <span className="tabular-nums">{formatINR(order.total)}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+                  <span className="text-xs font-medium">{w.status}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
+
+      {tab === "clock-room" && (
+        <div>
+          {storageTickets.length === 0 ? (
+            <EmptyState href="/clock-room" label="Check in a bag" text="No Clock Room activity yet." />
+          ) : (
+            <ul className="divide-y divide-[var(--border)] rounded-2xl border border-[var(--border)] bg-[var(--card)]">
+              {storageTickets.map((t) => (
+                <li key={t.id} className="flex items-center justify-between gap-3 p-4">
+                  <div>
+                    <p className="font-medium">{t.id}</p>
+                    <p className="text-xs text-[var(--muted)]">
+                      {t.bagDescription} · {formatDateTime(t.dropOffDate)}
+                    </p>
+                  </div>
+                  <span className="text-xs font-medium">{t.status}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
+
+      {tab === "wishlist" && (
+        <div>
+          {wishlistItems.length === 0 ? (
+            <EmptyState href="/shop" label="Browse the shop" text="Your wishlist is empty." />
+          ) : (
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+              {wishlistItems.map((p) => (
+                <ProductCard key={p.id} product={p} />
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </div>
+  );
+}
+
+function EmptyState({ text, href, label }: { text: string; href: string; label: string }) {
+  return (
+    <p className="text-sm text-[var(--muted)]">
+      {text}{" "}
+      <Link href={href} className="underline hover:text-leather">
+        {label}
+      </Link>
+      .
+    </p>
   );
 }

@@ -30,6 +30,12 @@ export function getStorageTicketById(id: string): StorageTicket | undefined {
   return readAll().find((t) => t.id.toLowerCase() === id.trim().toLowerCase());
 }
 
+export function findStorageTicketsByPhone(phone: string): StorageTicket[] {
+  const normalized = phone.replace(/\D/g, "");
+  if (!normalized) return [];
+  return readAll().filter((t) => t.phone.replace(/\D/g, "") === normalized);
+}
+
 export function findStorageTicketByClaimCode(
   idOrCode: string,
   phone: string

@@ -3,19 +3,21 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { Search, ShoppingBag, User, Menu, ChevronDown } from "lucide-react";
+import { Search, ShoppingBag, User, Menu, ChevronDown, Heart } from "lucide-react";
 import { AnnouncementBar } from "@/components/AnnouncementBar";
 import { MegaMenu } from "@/components/MegaMenu";
 import { MobileNav } from "@/components/MobileNav";
 import { useSiteUI } from "@/components/SiteUIProvider";
 import { useCart } from "@/hooks/use-cart";
 import { useProducts } from "@/hooks/use-products";
+import { useWishlist } from "@/hooks/use-wishlist";
 import { CATEGORY_LIST, CATEGORY_META } from "@/lib/categories";
 import { ProductCategory } from "@/lib/types";
 
 export function SiteHeader() {
-  const { setCartOpen, setMobileNavOpen } = useSiteUI();
+  const { setCartOpen, setMobileNavOpen, setSearchOpen } = useSiteUI();
   const { count } = useCart();
+  const { ids: wishlistIds } = useWishlist();
   const { products } = useProducts();
   const [activeCategory, setActiveCategory] = useState<ProductCategory | null>(null);
 
@@ -78,9 +80,26 @@ export function SiteHeader() {
           </nav>
 
           <div className="flex shrink-0 items-center gap-1 sm:gap-2">
-            <Link href="/shop" className="flex items-center gap-2 rounded-lg p-2 text-slate-700 transition-colors hover:bg-slate-100 hover:text-slate-950" aria-label="Search products">
+            <button
+              onClick={() => setSearchOpen(true)}
+              className="flex items-center gap-2 rounded-lg p-2 text-slate-700 transition-colors hover:bg-slate-100 hover:text-slate-950"
+              aria-label="Search products"
+            >
               <Search className="h-5 w-5 text-slate-600" />
               <span className="hidden text-xs font-medium text-slate-500 xl:inline">Search gear...</span>
+            </button>
+            <Link
+              href="/account?tab=wishlist"
+              className="relative rounded-lg p-2 text-slate-700 transition-colors hover:bg-slate-100 hover:text-slate-950"
+              aria-label="Wishlist"
+              title="Saved items"
+            >
+              <Heart className="h-5 w-5 text-slate-600" />
+              {wishlistIds.length > 0 && (
+                <span className="absolute right-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-amber-500 px-1 text-[10px] font-extrabold tabular-nums text-slate-950 shadow-xs">
+                  {wishlistIds.length}
+                </span>
+              )}
             </Link>
             <Link href="/account" className="rounded-lg p-2 text-slate-700 transition-colors hover:bg-slate-100 hover:text-slate-950" aria-label="Account" title="My account & orders">
               <User className="h-5 w-5 text-slate-600" />

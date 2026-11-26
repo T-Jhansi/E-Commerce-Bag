@@ -17,6 +17,7 @@ function ShopPageInner() {
     const slug = searchParams.get("category");
     const match = slug ? categoryBySlug(slug) : undefined;
     setCategory(match ? match.id : "All");
+    setSearch(searchParams.get("search") ?? "");
   }, [searchParams]);
 
   const filtered = useMemo(() => {
