@@ -68,6 +68,14 @@ export default function DealersPage() {
             </div>
             <p className="mt-3 text-sm">{dealer.address}</p>
             <p className="mt-1 text-sm text-[var(--muted)]">{dealer.phone}</p>
+            {dealer.hasClockRoom && (
+              <Link
+                href={`/clock-room?dealer=${dealer.id}`}
+                className="mt-3 inline-block text-xs font-medium text-leather hover:underline"
+              >
+                Clock Room available here →
+              </Link>
+            )}
           </div>
         ))}
       </div>

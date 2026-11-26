@@ -52,6 +52,7 @@ export interface PlaceOrderInput {
   city: string;
   pincode: string;
   paymentMethod: Order["paymentMethod"];
+  razorpayPaymentId?: string;
 }
 
 export const FLAT_SHIPPING = 99;
@@ -75,6 +76,7 @@ export function placeOrder(input: PlaceOrderInput): Order {
     city: input.city,
     pincode: input.pincode,
     paymentMethod: input.paymentMethod,
+    razorpayPaymentId: input.razorpayPaymentId,
     status: "Pending",
     notes: [
       {

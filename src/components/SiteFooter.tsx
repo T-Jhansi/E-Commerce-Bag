@@ -7,7 +7,7 @@ export function SiteFooter() {
   return (
     <footer className="border-t border-slate-900 bg-slate-950 pb-12 pt-16 text-xs text-slate-400">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-16 grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-5">
+        <div className="mb-16 grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4">
           <div className="pr-0 lg:col-span-2 lg:pr-8">
             <Link href="/" className="mb-4 inline-block">
               <Image src="/north-pole-logo.png" alt="North Pole" width={40} height={40} className="h-10 w-auto object-contain" />
@@ -77,16 +77,6 @@ export function SiteFooter() {
             </ul>
           </div>
 
-          <div>
-            <h4 className="mb-4 text-xs font-bold uppercase tracking-wider text-white">Staff</h4>
-            <ul className="space-y-2.5">
-              <li>
-                <Link href="/admin" className="transition-colors hover:text-amber-400">
-                  Staff login
-                </Link>
-              </li>
-            </ul>
-          </div>
         </div>
 
         <div className="flex flex-col items-center justify-between gap-4 border-t border-slate-900 pt-8 md:flex-row">
@@ -96,8 +86,11 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <div className="mt-8 text-center text-[11px] text-slate-500">
+        <div className="mt-8 flex flex-col items-center justify-center gap-2 text-center text-[11px] text-slate-500">
           <p>&copy; {new Date().getFullYear()} North Pole Luggage &amp; Bags. Demo site.</p>
+          <Link href="/admin" className="text-slate-600 hover:text-slate-400">
+            Partner &amp; staff access
+          </Link>
         </div>
       </div>
     </footer>

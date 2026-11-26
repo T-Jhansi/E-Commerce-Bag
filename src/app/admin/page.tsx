@@ -6,7 +6,7 @@ import { useProducts } from "@/hooks/use-products";
 import { useOrders } from "@/hooks/use-orders";
 import { useTickets } from "@/hooks/use-tickets";
 import { useWarranties } from "@/hooks/use-warranty";
-import { useStorageTickets } from "@/hooks/use-storage-tickets";
+import { useBookings } from "@/hooks/use-clockroom";
 import { formatDate, formatINR } from "@/lib/format";
 
 export default function AdminOverview() {
@@ -14,7 +14,7 @@ export default function AdminOverview() {
   const { orders } = useOrders();
   const { tickets } = useTickets();
   const { warranties } = useWarranties();
-  const { tickets: storageTickets } = useStorageTickets();
+  const { bookings } = useBookings();
 
   const lowStock = useMemo(() => products.filter((p) => p.stock <= 5), [products]);
   const openOrders = useMemo(
@@ -30,8 +30,8 @@ export default function AdminOverview() {
     [warranties]
   );
   const bagsInStorage = useMemo(
-    () => storageTickets.filter((t) => t.status === "Checked In"),
-    [storageTickets]
+    () => bookings.filter((b) => b.status === "Checked In" || b.status === "Reserved"),
+    [bookings]
   );
 
   return (

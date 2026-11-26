@@ -3,25 +3,40 @@
 import { useState } from "react";
 import { useDealers } from "@/hooks/use-dealers";
 import { createDealer, deleteDealer, updateDealer } from "@/lib/dealer-store";
-import { Dealer, NewDealerInput } from "@/lib/types";
+import { Dealer } from "@/lib/types";
 
-const EMPTY_FORM: NewDealerInput = {
+interface DealerFormState {
+  name: string;
+  city: string;
+  state: string;
+  address: string;
+  phone: string;
+  mapUrl: string;
+  lat: string;
+  lng: string;
+  hasClockRoom: boolean;
+}
+
+const EMPTY_FORM: DealerFormState = {
   name: "",
   city: "",
   state: "",
   address: "",
   phone: "",
   mapUrl: "",
+  lat: "",
+  lng: "",
+  hasClockRoom: true,
 };
 
 export default function AdminDealersPage() {
   const { dealers, ready } = useDealers();
   const [editingId, setEditingId] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState<NewDealerInput>(EMPTY_FORM);
+  const [form, setForm] = useState<DealerFormState>(EMPTY_FORM);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
 
-  function update<K extends keyof NewDealerInput>(key: K, value: NewDealerInput[K]) {
+  function update<K extends keyof DealerFormState>(key: K, value: DealerFormState[K]) {
     setForm((f) => ({ ...f, [key]: value }));
   }
 
@@ -39,6 +54,9 @@ export default function AdminDealersPage() {
       address: dealer.address,
       phone: dealer.phone,
       mapUrl: dealer.mapUrl ?? "",
+      lat: String(dealer.lat),
+      lng: String(dealer.lng),
+      hasClockRoom: dealer.hasClockRoom ?? true,
     });
     setEditingId(dealer.id);
     setShowForm(true);
@@ -47,10 +65,21 @@ export default function AdminDealersPage() {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!form.name.trim() || !form.city.trim() || !form.address.trim() || !form.phone.trim()) return;
+    const payload = {
+      name: form.name.trim(),
+      city: form.city.trim(),
+      state: form.state.trim(),
+      address: form.address.trim(),
+      phone: form.phone.trim(),
+      mapUrl: form.mapUrl.trim() || undefined,
+      lat: Number(form.lat) || 0,
+      lng: Number(form.lng) || 0,
+      hasClockRoom: form.hasClockRoom,
+    };
     if (editingId) {
-      updateDealer(editingId, form);
+      updateDealer(editingId, payload);
     } else {
-      createDealer(form);
+      createDealer(payload);
     }
     setShowForm(false);
     setEditingId(null);
@@ -97,6 +126,25 @@ export default function AdminDealersPage() {
           <Field label="Map URL (optional)">
             <input className="input" value={form.mapUrl} onChange={(e) => update("mapUrl", e.target.value)} placeholder="https://maps.google.com/..." />
           </Field>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field label="Latitude" required>
+              <input className="input" value={form.lat} onChange={(e) => update("lat", e.target.value)} placeholder="19.0596" />
+            </Field>
+            <Field label="Longitude" required>
+              <input className="input" value={form.lng} onChange={(e) => update("lng", e.target.value)} placeholder="72.8295" />
+            </Field>
+          </div>
+          <p className="text-xs text-[var(--muted)]">
+            Used to power &ldquo;nearest Clock Room&rdquo; search. Find coordinates by right-clicking the location on Google Maps.
+          </p>
+          <label className="flex items-center gap-2 text-sm">
+            <input
+              type="checkbox"
+              checked={form.hasClockRoom}
+              onChange={(e) => update("hasClockRoom", e.target.checked)}
+            />
+            Offers Clock Room bag storage
+          </label>
           <div className="flex gap-3">
             <button type="submit" className="rounded-lg bg-leather px-4 py-2 text-sm font-medium text-white transition hover:bg-leather-dark">
               {editingId ? "Save changes" : "Add dealer"}
@@ -119,13 +167,14 @@ export default function AdminDealersPage() {
               <th className="px-4 py-3 font-medium">Store</th>
               <th className="px-4 py-3 font-medium">City</th>
               <th className="px-4 py-3 font-medium">Phone</th>
+              <th className="px-4 py-3 font-medium">Clock Room</th>
               <th className="px-4 py-3 font-medium"></th>
             </tr>
           </thead>
           <tbody>
             {ready && dealers.length === 0 && (
               <tr>
-                <td colSpan={4} className="px-4 py-8 text-center text-[var(--muted)]">
+                <td colSpan={5} className="px-4 py-8 text-center text-[var(--muted)]">
                   No dealers yet.
                 </td>
               </tr>
@@ -137,6 +186,7 @@ export default function AdminDealersPage() {
                   {d.city}, {d.state}
                 </td>
                 <td className="px-4 py-3">{d.phone}</td>
+                <td className="px-4 py-3">{d.hasClockRoom ? "Yes" : "No"}</td>
                 <td className="px-4 py-3 text-right">
                   <button
                     type="button"

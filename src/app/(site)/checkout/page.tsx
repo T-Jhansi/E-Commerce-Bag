@@ -3,12 +3,14 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Loader2, ShieldCheck } from "lucide-react";
 import { useCart } from "@/hooks/use-cart";
 import { useAccount } from "@/hooks/use-account";
 import { formatINR } from "@/lib/format";
 import { clearCart } from "@/lib/cart-store";
 import { placeOrder } from "@/lib/order-store";
 import { Order } from "@/lib/types";
+import { payWithRazorpay, verifyRazorpayPayment } from "@/lib/use-razorpay";
 
 const FREE_SHIPPING_THRESHOLD = 2500;
 const FLAT_SHIPPING = 99;
@@ -25,7 +27,7 @@ export default function CheckoutPage() {
     address: "",
     city: "",
     pincode: "",
-    paymentMethod: "Cash on Delivery" as Order["paymentMethod"],
+    paymentMethod: "Razorpay" as Order["paymentMethod"],
   });
   const [error, setError] = useState<string | null>(null);
   const [placing, setPlacing] = useState(false);
@@ -63,7 +65,7 @@ export default function CheckoutPage() {
   const shipping = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : FLAT_SHIPPING;
   const total = subtotal + shipping;
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
     if (
@@ -76,14 +78,40 @@ export default function CheckoutPage() {
       setError("Please fill in your name, phone, and full address.");
       return;
     }
+
+    const orderLines = lines.map((l) => ({
+      productId: l.productId,
+      name: l.name,
+      price: l.price,
+      quantity: l.quantity,
+    }));
+
     setPlacing(true);
+
+    let razorpayPaymentId: string | undefined;
+    if (form.paymentMethod === "Razorpay") {
+      try {
+        const payment = await payWithRazorpay({
+          amount: total,
+          description: `North Pole order — ${orderLines.length} item${orderLines.length > 1 ? "s" : ""}`,
+          prefill: { name: form.customerName.trim(), email: form.email.trim() || undefined, contact: form.phone.trim() },
+        });
+        const verified = await verifyRazorpayPayment(payment);
+        if (!verified) {
+          setError("We couldn't verify that payment. Please try again.");
+          setPlacing(false);
+          return;
+        }
+        razorpayPaymentId = payment.razorpay_payment_id;
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Payment failed. Please try again.");
+        setPlacing(false);
+        return;
+      }
+    }
+
     const order = placeOrder({
-      lines: lines.map((l) => ({
-        productId: l.productId,
-        name: l.name,
-        price: l.price,
-        quantity: l.quantity,
-      })),
+      lines: orderLines,
       customerName: form.customerName.trim(),
       phone: form.phone.trim(),
       email: form.email.trim() || undefined,
@@ -91,6 +119,7 @@ export default function CheckoutPage() {
       city: form.city.trim(),
       pincode: form.pincode.trim(),
       paymentMethod: form.paymentMethod,
+      razorpayPaymentId,
     });
     clearCart();
     router.push(`/orders/${order.id}`);
@@ -168,8 +197,8 @@ export default function CheckoutPage() {
               value={form.paymentMethod}
               onChange={(e) => update("paymentMethod", e.target.value as Order["paymentMethod"])}
             >
+              <option value="Razorpay">Pay online — Card / UPI / Netbanking</option>
               <option value="Cash on Delivery">Cash on Delivery</option>
-              <option value="Card / UPI (mock)">Card / UPI (mock — no real payment yet)</option>
             </select>
           </Field>
 
@@ -178,10 +207,17 @@ export default function CheckoutPage() {
           <button
             type="submit"
             disabled={placing}
-            className="w-full rounded-lg bg-leather py-2.5 text-sm font-medium text-white transition hover:bg-leather-dark disabled:opacity-60 sm:w-auto sm:px-6"
+            className="flex w-full items-center justify-center gap-2 rounded-lg bg-leather py-2.5 text-sm font-medium text-white transition hover:bg-leather-dark disabled:opacity-60 sm:w-auto sm:px-6"
           >
-            Place order
+            {placing && <Loader2 className="h-4 w-4 animate-spin" />}
+            {placing ? "Processing..." : form.paymentMethod === "Razorpay" ? `Pay ${formatINR(total)}` : "Place order"}
           </button>
+          {form.paymentMethod === "Razorpay" && (
+            <p className="flex items-center gap-1.5 text-xs text-[var(--muted)]">
+              <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
+              Secured by Razorpay · test mode
+            </p>
+          )}
         </form>
 
         <div className="h-fit rounded-2xl border border-[var(--border)] bg-[var(--card)] p-6">

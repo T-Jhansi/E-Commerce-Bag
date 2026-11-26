@@ -7,7 +7,7 @@ import { useAccount } from "@/hooks/use-account";
 import { signIn, signOut } from "@/lib/auth-store";
 import { findOrdersByPhone } from "@/lib/order-store";
 import { findWarrantiesByPhone } from "@/lib/warranty-store";
-import { findStorageTicketsByPhone } from "@/lib/storage-store";
+import { findBookingsByPhone } from "@/lib/clockroom-store";
 import { useWishlist } from "@/hooks/use-wishlist";
 import { ProductCard } from "@/components/ProductCard";
 import { formatDate, formatDateTime, formatINR } from "@/lib/format";
@@ -116,7 +116,7 @@ function AccountHome({
 }) {
   const orders = findOrdersByPhone(account.phone);
   const warranties = findWarrantiesByPhone(account.phone);
-  const storageTickets = findStorageTicketsByPhone(account.phone);
+  const bookings = findBookingsByPhone(account.phone);
   const { items: wishlistItems } = useWishlist();
 
   return (
@@ -204,19 +204,29 @@ function AccountHome({
 
       {tab === "clock-room" && (
         <div>
-          {storageTickets.length === 0 ? (
-            <EmptyState href="/clock-room" label="Check in a bag" text="No Clock Room activity yet." />
+          {bookings.length === 0 ? (
+            <EmptyState href="/clock-room" label="Reserve a space" text="No Clock Room bookings yet." />
           ) : (
             <ul className="divide-y divide-[var(--border)] rounded-2xl border border-[var(--border)] bg-[var(--card)]">
-              {storageTickets.map((t) => (
-                <li key={t.id} className="flex items-center justify-between gap-3 p-4">
-                  <div>
-                    <p className="font-medium">{t.id}</p>
-                    <p className="text-xs text-[var(--muted)]">
-                      {t.bagDescription} · {formatDateTime(t.dropOffDate)}
-                    </p>
+              {bookings.map((b) => (
+                <li key={b.id} className="p-4">
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <p className="font-medium">{b.id}</p>
+                      <p className="text-xs text-[var(--muted)]">
+                        {b.dealerName} · {b.bagDescription} · {formatDateTime(b.createdAt)}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="tabular-nums">{formatINR(b.amount)}</p>
+                      <span className="text-xs font-medium">{b.status}</span>
+                    </div>
                   </div>
-                  <span className="text-xs font-medium">{t.status}</span>
+                  {(b.status === "Reserved" || b.status === "Checked In") && (
+                    <p className="mt-2 text-xs text-[var(--muted)]">
+                      Access code: <span className="font-mono font-bold tracking-widest text-leather">{b.otp}</span>
+                    </p>
+                  )}
                 </li>
               ))}
             </ul>

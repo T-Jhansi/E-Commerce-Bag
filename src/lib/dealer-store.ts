@@ -3,7 +3,7 @@
 import { Dealer, NewDealerInput } from "./types";
 import { readJSON, writeJSON, subscribeEvent } from "./persist";
 
-const STORAGE_KEY = "northpole_dealers_v1";
+const STORAGE_KEY = "northpole_dealers_v2";
 const EVENT_NAME = "northpole_dealers_change";
 
 const now = new Date().toISOString();
@@ -17,6 +17,9 @@ const SEED_DEALERS: Dealer[] = [
     address: "Shop 12, Linking Road, Bandra West, Mumbai 400050",
     phone: "+91 22 4000 1111",
     mapUrl: "https://maps.google.com/?q=Linking+Road+Bandra+West+Mumbai",
+    lat: 19.0596,
+    lng: 72.8295,
+    hasClockRoom: true,
     createdAt: now,
     updatedAt: now,
   },
@@ -28,6 +31,9 @@ const SEED_DEALERS: Dealer[] = [
     address: "100 Feet Road, Indiranagar, Bengaluru 560038",
     phone: "+91 80 4000 2222",
     mapUrl: "https://maps.google.com/?q=100+Feet+Road+Indiranagar+Bengaluru",
+    lat: 12.9716,
+    lng: 77.6412,
+    hasClockRoom: true,
     createdAt: now,
     updatedAt: now,
   },
@@ -39,6 +45,9 @@ const SEED_DEALERS: Dealer[] = [
     address: "Khan Market, New Delhi 110003",
     phone: "+91 11 4000 3333",
     mapUrl: "https://maps.google.com/?q=Khan+Market+New+Delhi",
+    lat: 28.6005,
+    lng: 77.2272,
+    hasClockRoom: true,
     createdAt: now,
     updatedAt: now,
   },
@@ -50,6 +59,9 @@ const SEED_DEALERS: Dealer[] = [
     address: "FC Road, Shivajinagar, Pune 411005",
     phone: "+91 20 4000 4444",
     mapUrl: "https://maps.google.com/?q=FC+Road+Shivajinagar+Pune",
+    lat: 18.5204,
+    lng: 73.8567,
+    hasClockRoom: true,
     createdAt: now,
     updatedAt: now,
   },
@@ -61,6 +73,9 @@ const SEED_DEALERS: Dealer[] = [
     address: "Road No. 36, Jubilee Hills, Hyderabad 500033",
     phone: "+91 40 4000 5555",
     mapUrl: "https://maps.google.com/?q=Jubilee+Hills+Hyderabad",
+    lat: 17.4239,
+    lng: 78.4738,
+    hasClockRoom: true,
     createdAt: now,
     updatedAt: now,
   },
@@ -115,4 +130,16 @@ export function updateDealer(id: string, patch: Partial<NewDealerInput>): Dealer
 
 export function deleteDealer(id: string) {
   writeAll(readAll().filter((d) => d.id !== id));
+}
+
+// Haversine distance in kilometers
+export function distanceKm(lat1: number, lng1: number, lat2: number, lng2: number): number {
+  const R = 6371;
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLng = ((lng2 - lng1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * Math.sin(dLng / 2) ** 2;
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
 }

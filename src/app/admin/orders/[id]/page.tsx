@@ -65,6 +65,7 @@ export default function AdminOrderDetail() {
           <Info label="City" value={order.city} />
           <Info label="Pincode" value={order.pincode} />
           <Info label="Payment" value={order.paymentMethod} />
+          {order.razorpayPaymentId && <Info label="Payment ID" value={order.razorpayPaymentId} />}
         </dl>
 
         <div className="mt-5 rounded-lg bg-[var(--canvas)] p-4 text-sm">

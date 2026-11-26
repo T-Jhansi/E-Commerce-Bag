@@ -134,7 +134,8 @@ export interface Order {
   address: string;
   city: string;
   pincode: string;
-  paymentMethod: "Cash on Delivery" | "Card / UPI (mock)";
+  paymentMethod: "Cash on Delivery" | "Razorpay";
+  razorpayPaymentId?: string;
   status: OrderStatus;
   notes: OrderNote[];
   createdAt: string;
@@ -205,47 +206,70 @@ export interface Dealer {
   address: string;
   phone: string;
   mapUrl?: string;
+  lat: number;
+  lng: number;
+  hasClockRoom?: boolean;
   createdAt: string;
   updatedAt: string;
 }
 
 export type NewDealerInput = Omit<Dealer, "id" | "createdAt" | "updatedAt">;
 
-// ---------- Clock Room (bag check-in / storage) ----------
+// ---------- Clock Room (paid location booking with QR/OTP access) ----------
 
-export type StorageStatus = "Checked In" | "Claimed" | "Overdue" | "Cancelled";
+export type BookingStatus = "Reserved" | "Checked In" | "Claimed" | "Cancelled";
 
-export const STORAGE_STATUSES: StorageStatus[] = [
+export const BOOKING_STATUSES: BookingStatus[] = [
+  "Reserved",
   "Checked In",
   "Claimed",
-  "Overdue",
   "Cancelled",
 ];
 
-export interface StorageNote {
+export interface BookingNote {
   id: string;
   date: string;
   author: string;
   text: string;
 }
 
-export interface StorageTicket {
-  id: string; // e.g. CR-1001
-  claimCode: string; // short code the customer keeps to claim the bag
+export interface ClockRoomBooking {
+  id: string; // e.g. CRB-1001
+  dealerId: string;
+  dealerName: string;
+  dealerAddress: string;
   customerName: string;
   phone: string;
   email?: string;
   bagDescription: string;
   itemCount: number;
-  dropOffDate: string; // ISO timestamp
-  expectedPickupDate?: string; // ISO date
-  status: StorageStatus;
-  notes: StorageNote[];
+  durationDays: number;
+  dropOffDate: string; // ISO date, planned
+  amount: number; // INR, amount paid
+  razorpayOrderId: string;
+  razorpayPaymentId: string;
+  otp: string; // 6-digit access code, also embedded in the QR payload
+  status: BookingStatus;
+  checkedInAt?: string;
+  claimedAt?: string;
+  notes: BookingNote[];
   createdAt: string;
   updatedAt: string;
 }
 
-export type NewStorageInput = Pick<
-  StorageTicket,
-  "customerName" | "phone" | "email" | "bagDescription" | "itemCount" | "expectedPickupDate"
+export type NewBookingInput = Pick<
+  ClockRoomBooking,
+  | "dealerId"
+  | "dealerName"
+  | "dealerAddress"
+  | "customerName"
+  | "phone"
+  | "email"
+  | "bagDescription"
+  | "itemCount"
+  | "durationDays"
+  | "dropOffDate"
+  | "amount"
+  | "razorpayOrderId"
+  | "razorpayPaymentId"
 >;
