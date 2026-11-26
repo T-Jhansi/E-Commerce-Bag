@@ -4,7 +4,7 @@ import { NewProductInput, Product } from "./types";
 import { SEED_PRODUCTS } from "./mock-products";
 import { readJSON, writeJSON, subscribeEvent } from "./persist";
 
-const STORAGE_KEY = "bagco_products_v1";
+const STORAGE_KEY = "bagco_products_v2";
 const EVENT_NAME = "bagco_products_change";
 
 function readAll(): Product[] {

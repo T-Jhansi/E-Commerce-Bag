@@ -58,9 +58,9 @@ export function ProductCard({ product }: { product: Product }) {
           </h3>
         </div>
 
-        <div className="flex items-center justify-between gap-2 border-t border-slate-100 pt-2">
-          <div>
-            <div className="flex items-baseline gap-1.5">
+        <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-2 border-t border-slate-100 pt-2">
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-baseline gap-x-1.5">
               <span className="text-base font-extrabold tabular-nums text-slate-950">{formatINR(product.price)}</span>
               {product.compareAtPrice && (
                 <span className="text-xs tabular-nums text-slate-400 line-through">{formatINR(product.compareAtPrice)}</span>
