@@ -37,3 +37,6 @@ next-env.d.ts
 
 .vercel
 .env*
+
+# design reference only, not part of the deployed app
+/north-pole-bags---premium-luggage,-backpacks-&-travel-gear/

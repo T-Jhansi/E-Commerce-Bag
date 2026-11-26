@@ -42,7 +42,7 @@ export default function AdminDashboard() {
   return (
     <main className="mx-auto min-h-screen max-w-5xl px-6 py-12">
       <header className="mb-8">
-        <h1 className="font-display text-3xl font-semibold">Find My Bag tickets</h1>
+        <h1 className="font-display text-3xl font-semibold">Maintenance &amp; Service tickets</h1>
         <p className="mt-1 text-sm text-[var(--muted)]">
           Servicing requests dropped off by customers.
         </p>

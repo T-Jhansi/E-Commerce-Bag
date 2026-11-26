@@ -8,7 +8,10 @@ const NAV = [
   { href: "/admin", label: "Overview", exact: true },
   { href: "/admin/products", label: "Products" },
   { href: "/admin/orders", label: "Orders" },
-  { href: "/admin/tickets", label: "Find My Bag" },
+  { href: "/admin/tickets", label: "Maintenance & Service" },
+  { href: "/admin/warranty", label: "Warranty" },
+  { href: "/admin/clock-room", label: "Clock Room" },
+  { href: "/admin/dealers", label: "Dealers" },
 ];
 
 export function AdminShell({ children }: { children: React.ReactNode }) {
@@ -19,7 +22,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
       <aside className="flex shrink-0 flex-col border-b border-[var(--border)] bg-[var(--card)] sm:w-56 sm:border-b-0 sm:border-r">
         <div className="px-5 py-5">
           <p className="text-xs font-medium uppercase tracking-[0.2em] text-leather">
-            Bag Co.
+            North Pole
           </p>
           <p className="font-display text-lg font-semibold">Staff panel</p>
         </div>

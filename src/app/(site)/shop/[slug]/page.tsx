@@ -131,11 +131,15 @@ export default function ProductDetailPage() {
           </div>
 
           <p className="mt-6 text-xs text-[var(--muted)]">
-            Every Bag Co. purchase is covered by our{" "}
-            <Link href="/customer" className="underline hover:text-leather">
-              Find My Bag
+            Every North Pole purchase can be{" "}
+            <Link href="/warranty" className="underline hover:text-leather">
+              registered for warranty
             </Link>{" "}
-            repair service.
+            and is backed by our{" "}
+            <Link href="/service" className="underline hover:text-leather">
+              Maintenance &amp; Service
+            </Link>{" "}
+            desk.
           </p>
         </div>
       </div>

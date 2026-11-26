@@ -35,7 +35,7 @@ export function AdminGate({ children }: { children: React.ReactNode }) {
     return (
       <main className="mx-auto flex min-h-screen max-w-sm flex-col justify-center px-6">
         <p className="text-xs font-medium uppercase tracking-[0.2em] text-leather">
-          Bag Co. · Staff only
+          North Pole · Staff only
         </p>
         <h1 className="mt-2 font-display text-2xl font-semibold">Admin sign-in</h1>
         <p className="mt-2 text-sm text-[var(--muted)]">

@@ -17,7 +17,7 @@ const BAG_TYPES = [
 
 type Tab = "drop-off" | "track";
 
-export default function CustomerPage() {
+export default function ServicePage() {
   const [tab, setTab] = useState<Tab>("drop-off");
 
   return (
@@ -27,11 +27,14 @@ export default function CustomerPage() {
           ← Back home
         </Link>
         <p className="mt-4 text-xs font-medium uppercase tracking-[0.2em] text-leather">
-          Bag Co. · Find My Bag
+          North Pole · Maintenance &amp; Service
         </p>
         <h1 className="mt-2 font-display text-3xl font-semibold">
-          Customer portal
+          Repair &amp; service desk
         </h1>
+        <p className="mt-2 text-sm text-[var(--muted)]">
+          Drop off a bag for repair, or track an existing service ticket.
+        </p>
       </header>
 
       <div className="mb-6 inline-flex rounded-full border border-[var(--border)] bg-[var(--card)] p-1">
@@ -188,7 +191,7 @@ function DropOffForm() {
             className="input"
             value={form.bagBrand}
             onChange={(e) => update("bagBrand", e.target.value)}
-            placeholder="Bag Co. Voyager"
+            placeholder="North Pole Voyager"
           />
         </Field>
       </div>

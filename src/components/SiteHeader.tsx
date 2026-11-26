@@ -1,12 +1,15 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCart } from "@/hooks/use-cart";
 
 const NAV_LINKS = [
   { href: "/shop", label: "Shop" },
-  { href: "/customer", label: "Find My Bag" },
+  { href: "/service", label: "Maintenance & Service" },
+  { href: "/clock-room", label: "Clock Room" },
+  { href: "/dealers", label: "Dealers" },
   { href: "/account", label: "Account" },
 ];
 
@@ -16,9 +19,12 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-10 border-b border-[var(--border)] bg-[var(--canvas)]/90 backdrop-blur">
-      <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-6 py-4">
-        <Link href="/" className="font-display text-lg font-semibold tracking-tight">
-          Bag Co.
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4">
+        <Link href="/" className="flex items-center gap-2">
+          <Image src="/north-pole-logo.png" alt="North Pole" width={36} height={36} className="h-9 w-9 object-contain" />
+          <span className="font-display text-lg font-semibold tracking-tight">
+            North Pole
+          </span>
         </Link>
 
         <nav className="hidden items-center gap-6 sm:flex">

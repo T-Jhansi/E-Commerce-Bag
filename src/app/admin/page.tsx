@@ -5,12 +5,16 @@ import { useMemo } from "react";
 import { useProducts } from "@/hooks/use-products";
 import { useOrders } from "@/hooks/use-orders";
 import { useTickets } from "@/hooks/use-tickets";
+import { useWarranties } from "@/hooks/use-warranty";
+import { useStorageTickets } from "@/hooks/use-storage-tickets";
 import { formatDate, formatINR } from "@/lib/format";
 
 export default function AdminOverview() {
   const { products } = useProducts();
   const { orders } = useOrders();
   const { tickets } = useTickets();
+  const { warranties } = useWarranties();
+  const { tickets: storageTickets } = useStorageTickets();
 
   const lowStock = useMemo(() => products.filter((p) => p.stock <= 5), [products]);
   const openOrders = useMemo(
@@ -20,6 +24,14 @@ export default function AdminOverview() {
   const openTickets = useMemo(
     () => tickets.filter((t) => t.status === "Received" || t.status === "In Service"),
     [tickets]
+  );
+  const openClaims = useMemo(
+    () => warranties.filter((w) => w.status === "Claim Requested"),
+    [warranties]
+  );
+  const bagsInStorage = useMemo(
+    () => storageTickets.filter((t) => t.status === "Checked In"),
+    [storageTickets]
   );
 
   return (
@@ -31,11 +43,13 @@ export default function AdminOverview() {
         </p>
       </header>
 
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
         <Tile label="Products" value={products.length} href="/admin/products" />
         <Tile label="Open orders" value={openOrders.length} href="/admin/orders" />
-        <Tile label="Open tickets" value={openTickets.length} href="/admin/tickets" />
+        <Tile label="Open service tickets" value={openTickets.length} href="/admin/tickets" />
         <Tile label="Low stock" value={lowStock.length} href="/admin/products" />
+        <Tile label="Warranty claims" value={openClaims.length} href="/admin/warranty" />
+        <Tile label="Bags in Clock Room" value={bagsInStorage.length} href="/admin/clock-room" />
       </div>
 
       <section className="mt-8">

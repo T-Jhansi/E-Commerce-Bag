@@ -15,9 +15,9 @@ const display = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "Bag Co. — Find My Bag Service",
+  title: "North Pole — Premium Luggage, Backpacks & Travel Gear",
   description:
-    "Track a bag in for repair, or manage service tickets from the admin panel.",
+    "Shop premium bags, register your warranty, book maintenance & service, find a dealer, or check a bag into the Clock Room.",
 };
 
 export default function RootLayout({

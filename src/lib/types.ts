@@ -148,3 +148,104 @@ export interface CustomerAccount {
   email: string;
   phone: string;
 }
+
+// ---------- Warranty ----------
+
+export type WarrantyStatus =
+  | "Active"
+  | "Claim Requested"
+  | "Claim Approved"
+  | "Claim Rejected"
+  | "Expired";
+
+export const WARRANTY_STATUSES: WarrantyStatus[] = [
+  "Active",
+  "Claim Requested",
+  "Claim Approved",
+  "Claim Rejected",
+  "Expired",
+];
+
+export interface WarrantyNote {
+  id: string;
+  date: string;
+  author: string;
+  text: string;
+}
+
+export interface WarrantyRegistration {
+  id: string; // e.g. WR-1001
+  productName: string;
+  orderId?: string;
+  serialNumber: string;
+  purchaseDate: string; // ISO date
+  warrantyYears: number;
+  customerName: string;
+  phone: string;
+  email?: string;
+  status: WarrantyStatus;
+  claimReason?: string;
+  notes: WarrantyNote[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type NewWarrantyInput = Pick<
+  WarrantyRegistration,
+  "productName" | "orderId" | "serialNumber" | "purchaseDate" | "warrantyYears" | "customerName" | "phone" | "email"
+>;
+
+// ---------- Dealers ----------
+
+export interface Dealer {
+  id: string; // e.g. DLR-001
+  name: string;
+  city: string;
+  state: string;
+  address: string;
+  phone: string;
+  mapUrl?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type NewDealerInput = Omit<Dealer, "id" | "createdAt" | "updatedAt">;
+
+// ---------- Clock Room (bag check-in / storage) ----------
+
+export type StorageStatus = "Checked In" | "Claimed" | "Overdue" | "Cancelled";
+
+export const STORAGE_STATUSES: StorageStatus[] = [
+  "Checked In",
+  "Claimed",
+  "Overdue",
+  "Cancelled",
+];
+
+export interface StorageNote {
+  id: string;
+  date: string;
+  author: string;
+  text: string;
+}
+
+export interface StorageTicket {
+  id: string; // e.g. CR-1001
+  claimCode: string; // short code the customer keeps to claim the bag
+  customerName: string;
+  phone: string;
+  email?: string;
+  bagDescription: string;
+  itemCount: number;
+  dropOffDate: string; // ISO timestamp
+  expectedPickupDate?: string; // ISO date
+  status: StorageStatus;
+  notes: StorageNote[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type NewStorageInput = Pick<
+  StorageTicket,
+  "customerName" | "phone" | "email" | "bagDescription" | "itemCount" | "expectedPickupDate"
+>;
