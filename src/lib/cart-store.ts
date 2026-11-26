@@ -68,7 +68,9 @@ export function clearCart() {
 
 export interface CartLine {
   productId: string;
+  slug: string;
   name: string;
+  image: string;
   price: number;
   quantity: number;
   lineTotal: number;
@@ -82,7 +84,9 @@ export function getCartLines(): CartLine[] {
       if (!product) return null;
       return {
         productId: product.id,
+        slug: product.slug,
         name: product.name,
+        image: product.image,
         price: product.price,
         quantity: item.quantity,
         lineTotal: product.price * item.quantity,

@@ -2,88 +2,110 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useState } from "react";
+import { Search, ShoppingBag, User, Menu, ChevronDown } from "lucide-react";
+import { AnnouncementBar } from "@/components/AnnouncementBar";
+import { MegaMenu } from "@/components/MegaMenu";
+import { MobileNav } from "@/components/MobileNav";
+import { useSiteUI } from "@/components/SiteUIProvider";
 import { useCart } from "@/hooks/use-cart";
-
-const NAV_LINKS = [
-  { href: "/shop", label: "Shop" },
-  { href: "/service", label: "Maintenance & Service" },
-  { href: "/clock-room", label: "Clock Room" },
-  { href: "/dealers", label: "Dealers" },
-  { href: "/account", label: "Account" },
-];
+import { useProducts } from "@/hooks/use-products";
+import { CATEGORY_LIST, CATEGORY_META } from "@/lib/categories";
+import { ProductCategory } from "@/lib/types";
 
 export function SiteHeader() {
-  const pathname = usePathname();
+  const { setCartOpen, setMobileNavOpen } = useSiteUI();
   const { count } = useCart();
+  const { products } = useProducts();
+  const [activeCategory, setActiveCategory] = useState<ProductCategory | null>(null);
+
+  const activeMeta = activeCategory ? CATEGORY_META[activeCategory] : null;
+  const featuredProduct = activeCategory
+    ? products.find((p) => p.category === activeCategory && p.featured) ??
+      products.find((p) => p.category === activeCategory)
+    : undefined;
 
   return (
-    <header className="sticky top-0 z-10 border-b border-[var(--border)] bg-[var(--canvas)]/90 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4">
-        <Link href="/" className="flex items-center gap-2">
-          <Image src="/north-pole-logo.png" alt="North Pole" width={36} height={36} className="h-9 w-9 object-contain" />
-          <span className="font-display text-lg font-semibold tracking-tight">
-            North Pole
-          </span>
-        </Link>
+    <header className="sticky top-0 z-40 border-b border-slate-200/90 bg-white shadow-xs">
+      <AnnouncementBar />
 
-        <nav className="hidden items-center gap-6 sm:flex">
-          {NAV_LINKS.map((link) => {
-            const active = pathname === link.href || pathname.startsWith(`${link.href}/`);
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`text-sm font-medium transition ${
-                  active ? "text-leather" : "text-[var(--muted)] hover:text-[var(--foreground)]"
-                }`}
-              >
-                {link.label}
-              </Link>
-            );
-          })}
-        </nav>
-
-        <div className="flex items-center gap-4">
-          <Link
-            href="/cart"
-            className="relative inline-flex items-center gap-1.5 text-sm font-medium"
-            aria-label={`Cart, ${count} item${count === 1 ? "" : "s"}`}
-          >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.75"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex h-20 items-center justify-between gap-4 md:gap-8">
+          <div className="flex items-center lg:hidden">
+            <button
+              onClick={() => setMobileNavOpen(true)}
+              className="-ml-2 rounded-lg p-2 text-slate-700 transition-colors hover:bg-slate-100 hover:text-slate-900"
+              aria-label="Open navigation menu"
             >
-              <path d="M3 3h2l.4 2M7 13h10l3-8H5.4M7 13L5.4 5M7 13l-2.293 2.293A1 1 0 0 0 5.414 17H17" />
-              <circle cx="9" cy="20" r="1.5" />
-              <circle cx="17" cy="20" r="1.5" />
-            </svg>
-            {count > 0 && (
-              <span className="absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-leather px-1 text-[10px] font-semibold text-white">
-                {count}
-              </span>
-            )}
+              <Menu className="h-6 w-6" />
+            </button>
+          </div>
+
+          <Link href="/" className="flex shrink-0 items-center gap-2">
+            <Image src="/north-pole-logo.png" alt="North Pole" width={44} height={44} className="h-9 w-9 object-contain sm:h-11 sm:w-11" />
+            <span className="font-display text-lg font-bold tracking-tight text-slate-950">North Pole</span>
           </Link>
+
+          <nav className="hidden items-center gap-1 lg:flex xl:gap-2">
+            {CATEGORY_LIST.map((cat) => {
+              const isOpen = activeCategory === cat.id;
+              return (
+                <div key={cat.id} className="relative" onMouseEnter={() => setActiveCategory(cat.id)}>
+                  <Link
+                    href={`/shop?category=${cat.slug}`}
+                    className={`flex items-center gap-1 whitespace-nowrap rounded-md px-3 py-2 text-sm font-semibold transition-colors ${
+                      isOpen ? "bg-slate-100 text-slate-950" : "text-slate-700 hover:bg-slate-50 hover:text-slate-950"
+                    }`}
+                  >
+                    <span>{cat.name}</span>
+                    <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-150 ${isOpen ? "rotate-180 text-amber-500" : "text-slate-400"}`} />
+                  </Link>
+                </div>
+              );
+            })}
+            <Link href="/shop" className="whitespace-nowrap rounded-md px-3 py-2 text-sm font-semibold text-amber-700 transition-colors hover:bg-amber-50 hover:text-amber-800">
+              All Products
+            </Link>
+            <Link href="/service" className="whitespace-nowrap rounded-md px-3 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 hover:text-slate-950">
+              Service
+            </Link>
+            <Link href="/clock-room" className="whitespace-nowrap rounded-md px-3 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 hover:text-slate-950">
+              Clock Room
+            </Link>
+            <Link href="/dealers" className="whitespace-nowrap rounded-md px-3 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 hover:text-slate-950">
+              Dealers
+            </Link>
+          </nav>
+
+          <div className="flex shrink-0 items-center gap-1 sm:gap-2">
+            <Link href="/shop" className="flex items-center gap-2 rounded-lg p-2 text-slate-700 transition-colors hover:bg-slate-100 hover:text-slate-950" aria-label="Search products">
+              <Search className="h-5 w-5 text-slate-600" />
+              <span className="hidden text-xs font-medium text-slate-500 xl:inline">Search gear...</span>
+            </Link>
+            <Link href="/account" className="rounded-lg p-2 text-slate-700 transition-colors hover:bg-slate-100 hover:text-slate-950" aria-label="Account" title="My account & orders">
+              <User className="h-5 w-5 text-slate-600" />
+            </Link>
+            <button
+              onClick={() => setCartOpen(true)}
+              className="ml-1 flex items-center gap-2.5 rounded-lg bg-slate-950 px-3.5 py-2 text-white shadow-sm transition-all hover:bg-slate-800 active:scale-95"
+              aria-label={`Shopping cart with ${count} items`}
+            >
+              <div className="relative">
+                <ShoppingBag className="h-5 w-5 text-amber-400" />
+                {count > 0 && (
+                  <span className="absolute -right-2 -top-1.5 min-w-[16px] rounded-full bg-amber-400 px-1.5 py-0.2 text-center text-[10px] font-extrabold tabular-nums text-slate-950">
+                    {count}
+                  </span>
+                )}
+              </div>
+              <span className="hidden text-xs font-bold uppercase tracking-wide sm:inline">Cart</span>
+            </button>
+          </div>
         </div>
       </div>
 
-      <nav className="flex items-center gap-5 overflow-x-auto border-t border-[var(--border)] px-6 py-2 sm:hidden">
-        {NAV_LINKS.map((link) => (
-          <Link
-            key={link.href}
-            href={link.href}
-            className="whitespace-nowrap text-sm font-medium text-[var(--muted)] hover:text-[var(--foreground)]"
-          >
-            {link.label}
-          </Link>
-        ))}
-      </nav>
+      <MegaMenu category={activeMeta} featuredProduct={featuredProduct} onClose={() => setActiveCategory(null)} />
+      <MobileNav />
     </header>
   );
 }

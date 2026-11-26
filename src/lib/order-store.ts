@@ -54,8 +54,8 @@ export interface PlaceOrderInput {
   paymentMethod: Order["paymentMethod"];
 }
 
-const FLAT_SHIPPING = 99;
-const FREE_SHIPPING_THRESHOLD = 2500;
+export const FLAT_SHIPPING = 99;
+export const FREE_SHIPPING_THRESHOLD = 2500;
 
 export function placeOrder(input: PlaceOrderInput): Order {
   const all = readAll();

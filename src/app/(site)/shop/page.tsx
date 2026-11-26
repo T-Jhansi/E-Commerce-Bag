@@ -1,14 +1,23 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { useProducts } from "@/hooks/use-products";
 import { ProductCard } from "@/components/ProductCard";
 import { PRODUCT_CATEGORIES, ProductCategory } from "@/lib/types";
+import { categoryBySlug } from "@/lib/categories";
 
-export default function ShopPage() {
+function ShopPageInner() {
   const { products, ready } = useProducts();
+  const searchParams = useSearchParams();
   const [category, setCategory] = useState<ProductCategory | "All">("All");
   const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    const slug = searchParams.get("category");
+    const match = slug ? categoryBySlug(slug) : undefined;
+    setCategory(match ? match.id : "All");
+  }, [searchParams]);
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -20,12 +29,10 @@ export default function ShopPage() {
   }, [products, category, search]);
 
   return (
-    <main className="mx-auto min-h-screen max-w-5xl px-6 py-12">
+    <main className="mx-auto min-h-screen max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
       <header className="mb-8">
-        <p className="text-xs font-medium uppercase tracking-[0.2em] text-leather">
-          Shop
-        </p>
-        <h1 className="mt-2 font-display text-3xl font-semibold">All bags</h1>
+        <p className="text-xs font-bold uppercase tracking-widest text-amber-600">North Pole · Shop</p>
+        <h1 className="mt-2 font-display text-3xl font-extrabold text-slate-950">All bags</h1>
       </header>
 
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -48,15 +55,23 @@ export default function ShopPage() {
       </div>
 
       {ready && filtered.length === 0 ? (
-        <p className="text-sm text-[var(--muted)]">No bags match your filters.</p>
+        <p className="text-sm text-slate-500">No bags match your filters.</p>
       ) : (
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+        <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
           {filtered.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
       )}
     </main>
+  );
+}
+
+export default function ShopPage() {
+  return (
+    <Suspense fallback={null}>
+      <ShopPageInner />
+    </Suspense>
   );
 }
 
@@ -73,10 +88,10 @@ function CategoryChip({
     <button
       type="button"
       onClick={onClick}
-      className={`rounded-full border px-3 py-1.5 text-sm font-medium transition ${
+      className={`rounded-full border px-3 py-1.5 text-xs font-bold uppercase tracking-wide transition ${
         active
-          ? "border-leather bg-leather text-white"
-          : "border-[var(--border)] text-[var(--muted)] hover:border-leather hover:text-[var(--foreground)]"
+          ? "border-slate-950 bg-slate-950 text-white"
+          : "border-slate-300 text-slate-600 hover:border-slate-950 hover:text-slate-950"
       }`}
     >
       {children}
