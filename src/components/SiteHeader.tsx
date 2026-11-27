@@ -68,15 +68,6 @@ export function SiteHeader() {
             <Link href="/shop" className="whitespace-nowrap rounded-md px-3 py-2 text-sm font-semibold text-amber-700 transition-colors hover:bg-amber-50 hover:text-amber-800">
               All Products
             </Link>
-            <Link href="/service" className="whitespace-nowrap rounded-md px-3 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 hover:text-slate-950">
-              Service
-            </Link>
-            <Link href="/clock-room" className="whitespace-nowrap rounded-md px-3 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 hover:text-slate-950">
-              Clock Room
-            </Link>
-            <Link href="/dealers" className="whitespace-nowrap rounded-md px-3 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 hover:text-slate-950">
-              Dealers
-            </Link>
           </nav>
 
           <div className="flex shrink-0 items-center gap-1 sm:gap-2">
@@ -86,7 +77,6 @@ export function SiteHeader() {
               aria-label="Search products"
             >
               <Search className="h-5 w-5 text-slate-600" />
-              <span className="hidden text-xs font-medium text-slate-500 xl:inline">Search gear...</span>
             </button>
             <Link
               href="/account?tab=wishlist"

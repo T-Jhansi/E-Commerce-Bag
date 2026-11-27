@@ -42,13 +42,21 @@ export function AnnouncementBar() {
             <ChevronRight className="ml-0.5 h-3 w-3" />
           </Link>
         </div>
-        <div className="hidden items-center gap-4 text-[11px] text-slate-300 lg:flex">
+        <div className="hidden items-center gap-3 text-[11px] text-slate-300 xl:flex">
           <Link href="/service" className="hover:text-amber-400">
             Track order
           </Link>
           <span>·</span>
           <Link href="/warranty" className="hover:text-amber-400">
-            Warranty claim
+            Warranty
+          </Link>
+          <span>·</span>
+          <Link href="/clock-room" className="hover:text-amber-400">
+            Clock Room
+          </Link>
+          <span>·</span>
+          <Link href="/dealers" className="hover:text-amber-400">
+            Dealers
           </Link>
         </div>
       </div>
