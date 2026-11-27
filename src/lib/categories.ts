@@ -1,5 +1,10 @@
 import { ProductCategory } from "./types";
 
+export interface SubcategoryMeta {
+  slug: string;
+  label: string;
+}
+
 export interface CategoryMeta {
   id: ProductCategory;
   slug: string;
@@ -7,7 +12,7 @@ export interface CategoryMeta {
   highlight: string;
   description: string;
   image: string;
-  subcategories: string[];
+  subcategories: SubcategoryMeta[];
 }
 
 export const CATEGORY_META: Record<ProductCategory, CategoryMeta> = {
@@ -18,7 +23,11 @@ export const CATEGORY_META: Record<ProductCategory, CategoryMeta> = {
     highlight: "Daily Carry",
     description: "Ergonomic air-mesh systems and tear-resistant ballistic fabrics for commutes and campus.",
     image: "/products/backpacks.jpg",
-    subcategories: ["Laptop & commuter packs", "Everyday daypacks", "Water-resistant series"],
+    subcategories: [
+      { slug: "laptop-commuter-packs", label: "Laptop & commuter packs" },
+      { slug: "everyday-daypacks", label: "Everyday daypacks" },
+      { slug: "water-resistant-series", label: "Water-resistant series" },
+    ],
   },
   Travel: {
     id: "Travel",
@@ -27,7 +36,11 @@ export const CATEGORY_META: Record<ProductCategory, CategoryMeta> = {
     highlight: "Go the Distance",
     description: "Duffels and trolleys built for weekend trips, treks, and international gates.",
     image: "/products/travel.jpg",
-    subcategories: ["Weekender duffels", "Hard-shell trolleys", "Expedition luggage"],
+    subcategories: [
+      { slug: "weekender-duffels", label: "Weekender duffels" },
+      { slug: "hard-shell-trolleys", label: "Hard-shell trolleys" },
+      { slug: "expedition-luggage", label: "Expedition luggage" },
+    ],
   },
   "Laptop Bags": {
     id: "Laptop Bags",
@@ -36,7 +49,11 @@ export const CATEGORY_META: Record<ProductCategory, CategoryMeta> = {
     highlight: "Boardroom Grade",
     description: "Drop-safe laptop compartments in messenger and sleeve formats for work on the move.",
     image: "/products/laptop-bags.jpg",
-    subcategories: ["Messenger bags", "Slim sleeves", "Commuter totes"],
+    subcategories: [
+      { slug: "messenger-bags", label: "Messenger bags" },
+      { slug: "slim-sleeves", label: "Slim sleeves" },
+      { slug: "commuter-totes", label: "Commuter totes" },
+    ],
   },
   Totes: {
     id: "Totes",
@@ -45,7 +62,11 @@ export const CATEGORY_META: Record<ProductCategory, CategoryMeta> = {
     highlight: "Everyday Essential",
     description: "Heavyweight canvas totes reinforced at every stress point for daily errands.",
     image: "/products/totes.jpg",
-    subcategories: ["Weekender totes", "Market totes", "Foldable totes"],
+    subcategories: [
+      { slug: "weekender-totes", label: "Weekender totes" },
+      { slug: "market-totes", label: "Market totes" },
+      { slug: "foldable-totes", label: "Foldable totes" },
+    ],
   },
   Accessories: {
     id: "Accessories",
@@ -54,7 +75,10 @@ export const CATEGORY_META: Record<ProductCategory, CategoryMeta> = {
     highlight: "Finishing Touches",
     description: "Luggage tags, organizers, and small leather goods to round out your kit.",
     image: "/products/accessories.jpg",
-    subcategories: ["Luggage tags", "Packing organizers", "Leather goods"],
+    subcategories: [
+      { slug: "luggage-tags", label: "Luggage tags" },
+      { slug: "leather-goods", label: "Leather goods" },
+    ],
   },
 };
 

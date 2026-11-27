@@ -71,6 +71,7 @@ export interface Product {
   slug: string;
   name: string;
   category: ProductCategory;
+  subcategory?: string; // slug matching CATEGORY_META[category].subcategories, for "shop by style" filtering
   price: number; // INR
   compareAtPrice?: number;
   description: string;

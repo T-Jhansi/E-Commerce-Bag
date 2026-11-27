@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { NewProductInput, PRODUCT_CATEGORIES, Product, ProductCategory } from "@/lib/types";
+import { CATEGORY_META } from "@/lib/categories";
 
 const CATEGORY_DEFAULT_IMAGE: Record<ProductCategory, string> = {
   Backpacks: "/products/backpacks.jpg",
@@ -23,6 +24,7 @@ export function ProductForm({
   const [form, setForm] = useState({
     name: initial?.name ?? "",
     category: initial?.category ?? PRODUCT_CATEGORIES[0],
+    subcategory: initial?.subcategory ?? "",
     price: initial?.price?.toString() ?? "",
     compareAtPrice: initial?.compareAtPrice?.toString() ?? "",
     description: initial?.description ?? "",
@@ -57,6 +59,7 @@ export function ProductForm({
     onSubmit({
       name: form.name.trim(),
       category: form.category as ProductCategory,
+      subcategory: form.subcategory || undefined,
       price,
       compareAtPrice: form.compareAtPrice ? Number(form.compareAtPrice) : undefined,
       description: form.description.trim(),
@@ -86,7 +89,10 @@ export function ProductForm({
           <select
             className="input"
             value={form.category}
-            onChange={(e) => update("category", e.target.value as ProductCategory)}
+            onChange={(e) => {
+              update("category", e.target.value as ProductCategory);
+              update("subcategory", "");
+            }}
           >
             {PRODUCT_CATEGORIES.map((c) => (
               <option key={c} value={c}>
@@ -95,15 +101,26 @@ export function ProductForm({
             ))}
           </select>
         </Field>
-        <Field label="Colorway" required>
-          <input
-            className="input"
-            value={form.colorway}
-            onChange={(e) => update("colorway", e.target.value)}
-            placeholder="Charcoal"
-          />
+        <Field label="Style (optional)">
+          <select className="input" value={form.subcategory} onChange={(e) => update("subcategory", e.target.value)}>
+            <option value="">No specific style</option>
+            {CATEGORY_META[form.category as ProductCategory].subcategories.map((sub) => (
+              <option key={sub.slug} value={sub.slug}>
+                {sub.label}
+              </option>
+            ))}
+          </select>
         </Field>
       </div>
+
+      <Field label="Colorway" required>
+        <input
+          className="input"
+          value={form.colorway}
+          onChange={(e) => update("colorway", e.target.value)}
+          placeholder="Charcoal"
+        />
+      </Field>
 
       <div className="grid gap-4 sm:grid-cols-3">
         <Field label="Price (₹)" required>

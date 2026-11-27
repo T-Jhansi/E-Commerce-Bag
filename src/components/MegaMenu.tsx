@@ -47,13 +47,13 @@ export function MegaMenu({
             </h4>
             <ul className="space-y-3">
               {category.subcategories.map((sub) => (
-                <li key={sub}>
+                <li key={sub.slug}>
                   <Link
-                    href={`/shop?category=${category.slug}`}
+                    href={`/shop?category=${category.slug}&subcategory=${sub.slug}`}
                     onClick={onClose}
                     className="group flex w-full items-center justify-between py-1 text-left text-sm font-medium text-slate-700 transition-all hover:translate-x-1 hover:text-amber-600"
                   >
-                    <span>{sub}</span>
+                    <span>{sub.label}</span>
                     <ArrowRight className="h-3.5 w-3.5 text-slate-300 opacity-0 transition-opacity group-hover:opacity-100 group-hover:text-amber-500" />
                   </Link>
                 </li>

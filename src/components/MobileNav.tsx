@@ -83,12 +83,12 @@ export function MobileNav() {
                   <div className="space-y-1.5 pb-3 pl-4 pr-2">
                     {cat.subcategories.map((sub) => (
                       <Link
-                        key={sub}
-                        href={`/shop?category=${cat.slug}`}
+                        key={sub.slug}
+                        href={`/shop?category=${cat.slug}&subcategory=${sub.slug}`}
                         onClick={close}
                         className="flex items-center justify-between py-1.5 text-xs text-slate-600 hover:text-amber-600"
                       >
-                        <span>{sub}</span>
+                        <span>{sub.label}</span>
                         <ChevronRight className="h-3 w-3 text-slate-300" />
                       </Link>
                     ))}
