@@ -6,7 +6,9 @@ const config: Config = {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
-  darkMode: "media",
+  // "class" (never toggled) keeps the site on its single light brand
+  // theme regardless of the visitor's OS dark-mode setting.
+  darkMode: "class",
   theme: {
     extend: {
       colors: {

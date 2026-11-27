@@ -2,7 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* North Pole always renders in its light brand theme, regardless of the
+   visitor's OS dark-mode setting, so the storefront stays visually
+   consistent with the header, hero, and product cards. */
 :root {
+  color-scheme: light;
   --background: #f8fafc;
   --canvas: #f8fafc;
   --foreground: #0f172a;
@@ -11,19 +15,6 @@
   --muted: #64748b;
   --leather: #d97706;
   --leather-dark: #b45309;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #020617;
-    --canvas: #0f172a;
-    --foreground: #f1f5f9;
-    --card: #111827;
-    --border: #1e293b;
-    --muted: #94a3b8;
-    --leather: #fbbf24;
-    --leather-dark: #f59e0b;
-  }
 }
 
 * {

@@ -7,11 +7,11 @@ import { formatDate, formatINR } from "@/lib/format";
 import { ORDER_STATUSES, OrderStatus } from "@/lib/types";
 
 const STATUS_STYLES: Record<OrderStatus, string> = {
-  Pending: "bg-slate-100 text-slate-700 dark:bg-slate-800/60 dark:text-slate-300",
-  Processing: "bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300",
-  Shipped: "bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300",
-  Delivered: "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300",
-  Cancelled: "bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300",
+  Pending: "bg-slate-100 text-slate-700",
+  Processing: "bg-amber-100 text-amber-800",
+  Shipped: "bg-blue-100 text-blue-800",
+  Delivered: "bg-emerald-100 text-emerald-800",
+  Cancelled: "bg-rose-100 text-rose-700",
 };
 
 export default function AdminOrdersPage() {
