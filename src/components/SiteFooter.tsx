@@ -7,7 +7,7 @@ export function SiteFooter() {
   return (
     <footer className="border-t border-slate-900 bg-slate-950 pb-12 pt-16 text-xs text-slate-400">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-16 grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4">
+        <div className="mb-16 grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-5">
           <div className="pr-0 lg:col-span-2 lg:pr-8">
             <Link href="/" className="mb-4 inline-block">
               <Image src="/north-pole-logo.png" alt="North Pole" width={40} height={40} className="h-10 w-auto object-contain" />
@@ -77,6 +77,26 @@ export function SiteFooter() {
             </ul>
           </div>
 
+          <div>
+            <h4 className="mb-4 text-xs font-bold uppercase tracking-wider text-white">Legal</h4>
+            <ul className="space-y-2.5">
+              <li>
+                <Link href="/terms" className="transition-colors hover:text-amber-400">
+                  Terms &amp; Conditions
+                </Link>
+              </li>
+              <li>
+                <Link href="/privacy" className="transition-colors hover:text-amber-400">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/shipping" className="transition-colors hover:text-amber-400">
+                  Shipping &amp; Returns
+                </Link>
+              </li>
+            </ul>
+          </div>
         </div>
 
         <div className="flex flex-col items-center justify-between gap-4 border-t border-slate-900 pt-8 md:flex-row">

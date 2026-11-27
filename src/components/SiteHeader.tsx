@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Search, ShoppingBag, User, Menu, ChevronDown, Heart } from "lucide-react";
 import { AnnouncementBar } from "@/components/AnnouncementBar";
 import { MegaMenu } from "@/components/MegaMenu";
+import { ServicesMenu } from "@/components/ServicesMenu";
 import { MobileNav } from "@/components/MobileNav";
 import { useSiteUI } from "@/components/SiteUIProvider";
 import { useCart } from "@/hooks/use-cart";
@@ -20,6 +21,7 @@ export function SiteHeader() {
   const { ids: wishlistIds } = useWishlist();
   const { products } = useProducts();
   const [activeCategory, setActiveCategory] = useState<ProductCategory | null>(null);
+  const [servicesOpen, setServicesOpen] = useState(false);
 
   const activeMeta = activeCategory ? CATEGORY_META[activeCategory] : null;
   const featuredProduct = activeCategory
@@ -52,7 +54,14 @@ export function SiteHeader() {
             {CATEGORY_LIST.map((cat) => {
               const isOpen = activeCategory === cat.id;
               return (
-                <div key={cat.id} className="relative" onMouseEnter={() => setActiveCategory(cat.id)}>
+                <div
+                  key={cat.id}
+                  className="relative"
+                  onMouseEnter={() => {
+                    setActiveCategory(cat.id);
+                    setServicesOpen(false);
+                  }}
+                >
                   <Link
                     href={`/shop?category=${cat.slug}`}
                     className={`flex items-center gap-1 whitespace-nowrap rounded-md px-3 py-2 text-sm font-semibold transition-colors ${
@@ -68,6 +77,23 @@ export function SiteHeader() {
             <Link href="/shop" className="whitespace-nowrap rounded-md px-3 py-2 text-sm font-semibold text-amber-700 transition-colors hover:bg-amber-50 hover:text-amber-800">
               All Products
             </Link>
+            <div
+              className="relative"
+              onMouseEnter={() => {
+                setServicesOpen(true);
+                setActiveCategory(null);
+              }}
+            >
+              <button
+                className={`flex items-center gap-1 whitespace-nowrap rounded-md px-3 py-2 text-sm font-semibold transition-colors ${
+                  servicesOpen ? "bg-slate-100 text-slate-950" : "text-slate-700 hover:bg-slate-50 hover:text-slate-950"
+                }`}
+              >
+                <span>Services</span>
+                <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-150 ${servicesOpen ? "rotate-180 text-amber-500" : "text-slate-400"}`} />
+              </button>
+              <ServicesMenu open={servicesOpen} onClose={() => setServicesOpen(false)} />
+            </div>
           </nav>
 
           <div className="flex shrink-0 items-center gap-1 sm:gap-2">
