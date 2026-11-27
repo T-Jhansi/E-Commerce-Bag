@@ -43,7 +43,7 @@ export function AnnouncementBar() {
           </Link>
         </div>
         <div className="hidden items-center gap-3 text-[11px] text-slate-300 xl:flex">
-          <Link href="/service" className="hover:text-amber-400">
+          <Link href="/orders" className="hover:text-amber-400">
             Track order
           </Link>
           <span>·</span>

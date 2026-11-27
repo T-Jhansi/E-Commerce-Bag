@@ -70,7 +70,7 @@ export function SiteFooter() {
                 </Link>
               </li>
               <li>
-                <Link href="/account" className="transition-colors hover:text-amber-400">
+                <Link href="/orders" className="transition-colors hover:text-amber-400">
                   Track an order
                 </Link>
               </li>
